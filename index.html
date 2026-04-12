@@ -3,20 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luminelle — Notice Bar v2</title>
+<title>Luminelle — Notice Bar Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-.nb{background:#083D77;width:100%;height:40px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.nb-msg{position:absolute;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Montserrat','Segoe UI',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:.03em;opacity:0;transition:opacity .6s ease;pointer-events:none;padding:0 16px;text-align:center}
-.nb-msg.active{opacity:1;pointer-events:auto}
-.nb-dot{width:6px;height:6px;background:rgba(255,255,255,.4);border-radius:50%;flex-shrink:0}
-.nb-timer{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:700;letter-spacing:.05em;flex-shrink:0}
-@media(max-width:480px){
-  .nb{height:36px}
-  .nb-msg{font-size:11px;gap:6px}
-  .nb-timer{font-size:10px;padding:2px 6px}
-  .nb-dot{display:none}
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  .nb {
+    background: #083D77;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    /* Font Poppins */
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .nb-msg {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500; /* Pro weight */
+    color: #fff;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    /* Animation nqiya dyal slide-up */
+    transform: translateY(10px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    padding: 0 16px;
+    text-align: center;
+  }
+
+  .nb-msg.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .nb-dot {
+    width: 5px;
+    height: 5px;
+    background: #FFD700; /* Lon s-fer (Gold) bach t-jbed l-3in */
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .nb-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFD700; /* Timer b l-Gold bach y-ban l-klyon mzyan */
+    font-variant-numeric: tabular-nums; /* Bach l-arqam may-t-za3-z3ouch */
+  }
+
+  @media(max-width: 480px){
+    .nb { height: 38px; }
+    .nb-msg { font-size: 10px; gap: 8px; }
+    .nb-timer { font-size: 10px; padding: 2px 6px; }
+    .nb-dot { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -25,7 +84,7 @@
   <div class="nb-msg active" id="msg1">
     <span class="nb-dot"></span>
     <span>Fin de la Promo Ce Soir À Minuit ⏳</span>
-    <span class="nb-timer" id="timer">--:--:--</span>
+    <span class="nb-timer" id="timer">00:00:00</span>
     <span class="nb-dot"></span>
   </div>
   <div class="nb-msg" id="msg2">
@@ -37,26 +96,39 @@
 
 <script>
 (function(){
-  var m1=document.getElementById('msg1'),m2=document.getElementById('msg2'),t=document.getElementById('timer'),cur=1;
+  var m1 = document.getElementById('msg1'), 
+      m2 = document.getElementById('msg2'), 
+      t = document.getElementById('timer'), 
+      cur = 1;
 
-  function pad(n){return n<10?'0'+n:n}
+  function pad(n) { return n < 10 ? '0' + n : n; }
 
-  function tick(){
-    var now=new Date(),end=new Date();
-    end.setHours(23,59,59,999);
-    var diff=end-now;
-    if(diff<0)diff=0;
-    var h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-    t.textContent=pad(h)+':'+pad(m)+':'+pad(s);
+  function tick() {
+    var now = new Date(), end = new Date();
+    end.setHours(23, 59, 59, 999);
+    var diff = end - now;
+    if (diff < 0) diff = 0;
+    var h = Math.floor(diff / 3600000), 
+        m = Math.floor((diff % 3600000) / 60000), 
+        s = Math.floor((diff % 60000) / 1000);
+    t.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
   }
+  
   tick();
-  setInterval(tick,1000);
+  setInterval(tick, 1000);
 
-  function swap(){
-    if(cur===1){m1.classList.remove('active');setTimeout(function(){m2.classList.add('active')},300);cur=2;}
-    else{m2.classList.remove('active');setTimeout(function(){m1.classList.add('active')},300);cur=1;}
+  function swap() {
+    if (cur === 1) {
+      m1.classList.remove('active');
+      setTimeout(function() { m2.classList.add('active'); }, 600);
+      cur = 2;
+    } else {
+      m2.classList.remove('active');
+      setTimeout(function() { m1.classList.add('active'); }, 600);
+      cur = 1;
+    }
   }
-  setInterval(swap,5000);
+  setInterval(swap, 5000);
 })();
 </script>
 
